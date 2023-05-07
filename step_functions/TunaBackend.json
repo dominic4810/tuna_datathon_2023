@@ -1,0 +1,41 @@
+{
+  "StartAt": "IsUseDocumentRetrieval",
+  "States": {
+    "IsUseDocumentRetrieval": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.UseDocumentRetrieval",
+          "StringEquals": "true",
+          "Next": "EmbedQuestion"
+        },
+        {
+          "Variable": "$.UseDocumentRetrieval",
+          "StringEquals": "false",
+          "Next": "GenerateAnswer"
+        }
+      ],
+      "Default": "GenerateAnswer"
+    },
+    "EmbedQuestion": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:070515415235:function:gpt6jInference",
+      "Next": "RetrieveDocument"
+    },
+    "RetrieveDocument": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:070515415235:function:retrieveDocuments",
+      "Next": "CreatePrompt"
+    },
+    "CreatePrompt": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:070515415235:function:createPrompt",
+      "Next": "GenerateAnswer"
+    },
+    "GenerateAnswer": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:070515415235:function:flanInference",
+      "End": true
+    }
+  }
+}

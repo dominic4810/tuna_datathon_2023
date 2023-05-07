@@ -1,0 +1,16 @@
+{
+    "Comment": "When an .xml file is uploaded to s3, a automatic workflow is trigerred that parses it into .json files (one per article). Then an embedding is calculated for each json file and saved to the embedding DB",
+    "StartAt": "xml2json",
+    "States": {
+        "xml2json": {
+            "Type": "Task",
+            "Resource": "arn:aws:lambda:us-east-1:070515415235:function:Xml2Json",
+            "Next": "json2embedding"
+        },
+        "json2embedding": {
+            "Type": "Task",
+            "Resource": "arn:aws:lambda:us-east-1:070515415235:function:json2EmbeddingDataset",
+            "End": true
+        }
+    }
+}
